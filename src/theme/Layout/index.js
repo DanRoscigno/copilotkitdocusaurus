@@ -1,20 +1,22 @@
-import React from 'react';
+import React from "react";
+import { CopilotKit } from "@copilotkit/react-core";
 import { CopilotPopup } from "@copilotkit/react-ui";
-import clsx from 'clsx';
-import ErrorBoundary from '@docusaurus/ErrorBoundary';
+import "@copilotkit/react-ui/styles.css";
+import clsx from "clsx";
+import ErrorBoundary from "@docusaurus/ErrorBoundary";
 import {
   PageMetadata,
   SkipToContentFallbackId,
   ThemeClassNames,
-} from '@docusaurus/theme-common';
-import {useKeyboardNavigation} from '@docusaurus/theme-common/internal';
-import SkipToContent from '@theme/SkipToContent';
-import AnnouncementBar from '@theme/AnnouncementBar';
-import Navbar from '@theme/Navbar';
-import Footer from '@theme/Footer';
-import LayoutProvider from '@theme/Layout/Provider';
-import ErrorPageContent from '@theme/ErrorPageContent';
-import styles from './styles.module.css';
+} from "@docusaurus/theme-common";
+import { useKeyboardNavigation } from "@docusaurus/theme-common/internal";
+import SkipToContent from "@theme/SkipToContent";
+import AnnouncementBar from "@theme/AnnouncementBar";
+import Navbar from "@theme/Navbar";
+import Footer from "@theme/Footer";
+import LayoutProvider from "@theme/Layout/Provider";
+import ErrorPageContent from "@theme/ErrorPageContent";
+import styles from "./styles.module.css";
 export default function Layout(props) {
   const {
     children,
@@ -26,35 +28,40 @@ export default function Layout(props) {
   } = props;
   useKeyboardNavigation();
   return (
-    <LayoutProvider>
-      <PageMetadata title={title} description={description} />
+    <CopilotKit publicApiKey="<ck_pub_a9b6f0cee62ab9c42692f25ccfe08e38>">
+      <LayoutProvider>
+        <PageMetadata title={title} description={description} />
 
-      <SkipToContent />
+        <SkipToContent />
 
-      <AnnouncementBar />
+        <AnnouncementBar />
 
-      <Navbar />
+        <Navbar />
 
-      <div
-        id={SkipToContentFallbackId}
-        className={clsx(
-          ThemeClassNames.wrapper.main,
-          styles.mainWrapper,
-          wrapperClassName,
-        )}>
-        <ErrorBoundary fallback={(params) => <ErrorPageContent {...params} />}>
-          {children}
-        </ErrorBoundary>
-      </div>
+        <div
+          id={SkipToContentFallbackId}
+          className={clsx(
+            ThemeClassNames.wrapper.main,
+            styles.mainWrapper,
+            wrapperClassName
+          )}
+        >
+          <ErrorBoundary
+            fallback={(params) => <ErrorPageContent {...params} />}
+          >
+            {children}
+          </ErrorBoundary>
+        </div>
 
-          {!noFooter && <Footer />}
+        {!noFooter && <Footer />}
         <CopilotPopup
-        labels={{
-          title: "Your Docusaurus Assistant",
-          initial: "Ask me a question about our docs!"
-        }}
-        defaultOpen={true}
-      />
-    </LayoutProvider>
+          labels={{
+            title: "Your Docusaurus Assistant",
+            initial: "Ask me a question about our docs!",
+          }}
+          defaultOpen={true}
+        />
+      </LayoutProvider>
+    </CopilotKit>
   );
 }
