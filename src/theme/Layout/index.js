@@ -1,4 +1,5 @@
 import React from 'react';
+import { CopilotPopup } from "@copilotkit/react-ui";
 import clsx from 'clsx';
 import ErrorBoundary from '@docusaurus/ErrorBoundary';
 import {
@@ -46,7 +47,14 @@ export default function Layout(props) {
         </ErrorBoundary>
       </div>
 
-      {!noFooter && <Footer />}
+          {!noFooter && <Footer />}
+        <CopilotPopup
+        labels={{
+          title: "Your Docusaurus Assistant",
+          initial: "Ask me a question about our docs!"
+        }}
+        defaultOpen={true}
+      />
     </LayoutProvider>
   );
 }
