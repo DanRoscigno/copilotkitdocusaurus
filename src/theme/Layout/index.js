@@ -56,8 +56,8 @@ export default function Layout(props) {
         {!noFooter && <Footer />}
         <CopilotPopup
           labels={{
-            title: "Your Docusaurus Assistant",
-            initial: "Ask me a question about our docs!",
+            title: "StarRocks Assistant",
+            initial: "AI generated answers are based on docs and other sources. Please test answers in non-production environments.",
           }}
           defaultOpen={true}
         />
