@@ -28,7 +28,9 @@ export default function Layout(props) {
   } = props;
   useKeyboardNavigation();
   return (
-    <CopilotKit publicApiKey="<ck_pub_a9b6f0cee62ab9c42692f25ccfe08e38>">
+      // <CopilotKit publicApiKey="<ck_pub_a9b6f0cee62ab9c42692f25ccfe08e38>">
+      <CopilotKit agent="sr_agent" runtimeUrl="https://ai-agent.starrocks.com/copilotkit" showDevConsole={true}>
+
       <LayoutProvider>
         <PageMetadata title={title} description={description} />
 
