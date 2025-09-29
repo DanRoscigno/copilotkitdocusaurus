@@ -40,6 +40,8 @@
   max-height: calc(100% - 10rem) !important;
   min-width: 60% !important;
   min-height: 60% !important;
+  width: fit-content !important;
+  height: fit-content !important;
   overflow: auto;
   resize: both;
 }
