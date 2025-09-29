@@ -1,6 +1,6 @@
 import React from "react";
 import { CopilotKit } from "@copilotkit/react-core";
-import { CopilotPopup } from "@copilotkit/react-ui";
+import { CopilotPopup, useCopilotContext  } from "@copilotkit/react-ui";
 import "@copilotkit/react-ui/styles.css";
 import clsx from "clsx";
 import ErrorBoundary from "@docusaurus/ErrorBoundary";
@@ -19,6 +19,8 @@ import ErrorPageContent from "@theme/ErrorPageContent";
 import styles from "./styles.module.css";
 import {SearchDocActionView} from "@site/src/components/SearchDocActionView";
 import {GeneralToolCallView} from "@site/src/components/GeneralToolCallView";
+
+
 
 
 const createMarkdownTagRenderers = (originalRenderers = {}) => {
@@ -103,7 +105,7 @@ export default function Layout(props) {
           }}
           defaultOpen={true}
           markdownTagRenderers={createMarkdownTagRenderers()}
-          RenderActionExecutionMessage={MyRenderActionExecutionMessage}
+          RenderMessage={MyRenderActionExecutionMessage}
         />
       </LayoutProvider>
     </CopilotKit>
