@@ -29,8 +29,17 @@
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
 }
 
-/*
-.copilotKitDevConsole {
-    display: none !important;
+.copilotKitWindow {
+  bottom: 5rem;
+  right: 1rem;
+  top: auto;
+  left: auto;
+  border-width: 0px;
+  margin-bottom: 1rem;
+  max-width: calc(100% - 2rem) !important;
+  max-height: calc(100% - 10rem) !important;
+  min-width: 60% !important;
+  min-height: 60% !important;
+  overflow: auto;
+  resize: both;
 }
-*/
