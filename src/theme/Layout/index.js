@@ -19,6 +19,7 @@ import ErrorPageContent from "@theme/ErrorPageContent";
 import styles from "./styles.module.css";
 import {SearchDocActionView} from "@site/src/components/SearchDocActionView";
 import {GeneralToolCallView} from "@site/src/components/GeneralToolCallView";
+import {MyPopup} from "@site/src/components/MyPopup";
 
 
 const createMarkdownTagRenderers = (originalRenderers = {}) => {
@@ -96,15 +97,7 @@ export default function Layout(props) {
         </div>
 
         {!noFooter && <Footer />}
-        <CopilotPopup
-          labels={{
-            title: "StarRocks Assistant",
-            initial: "AI generated answers are based on docs and other sources. Please test answers in non-production environments.",
-          }}
-          defaultOpen={true}
-          markdownTagRenderers={createMarkdownTagRenderers()}
-          RenderActionExecutionMessage={MyRenderActionExecutionMessage}
-        />
+        <MyPopup />
       </LayoutProvider>
     </CopilotKit>
   );
