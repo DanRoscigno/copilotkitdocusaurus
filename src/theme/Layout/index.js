@@ -58,54 +58,6 @@ function MyRenderActionExecutionMessage(props) {
     }
 }
 
-function NewThreadButton() {
-  const { setThreadId } = useCopilotContext();
-        const { reset } = useCopilotChat();
-
-  const startNewThread = () => {
-    // Generate a new UUID for the thread
-    const newThreadId = crypto.randomUUID();
-      setThreadId(newThreadId);
-      reset();
-  };
-    
-
-    
-  return (
-    <button
-          onClick={startNewThread}
-          className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
-      >
-          New Thread
-      </button>
-  );
-}
-
-function CustomInputWithReset({ inProgress, onSend, onStop, onUpload }) {
-  const { reset } = useCopilotChat();
-  
-  return (
-    <div className="copilotKitInputControls">
-      {onUpload && (
-        <button onClick={onUpload} className="copilotKitInputControlButton">
-          {/* upload icon */}
-        </button>
-      )}
-      
-      {/* Your reset button */}
-      <button onClick={reset} className="copilotKitInputControlButton">
-        {/* reset icon */}r
-      </button>
-      
-      <div style={{ flexGrow: 1 }} />
-      
-      <button onClick={inProgress ? onStop : () => onSend(text)} className="copilotKitInputControlButton">
-        {/* send/stop icon */}s
-      </button>
-    </div>
-  );
-}
-
 export default function Layout(props) {
   const {
     children,
