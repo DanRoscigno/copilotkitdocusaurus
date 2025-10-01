@@ -1,22 +1,28 @@
-import React, { useState } from "react";
-import { CopilotPopup } from "@copilotkit/react-ui";
+import React from "react";
+import { CopilotPopup  } from "@copilotkit/react-ui";
+import { useCopilotContext, useCopilotChat } from "@copilotkit/react-core";
 
 export default function CopilotWithReset({
   markdownTagRenderers,
   RenderActionExecutionMessage,
 }) {
-  const [resetCount, setResetCount] = useState(0);
+  const { setThreadId } = useCopilotContext();
+  const { reset: resetChat } = useCopilotChat();
 
   const handleReset = async () => {
     try {
-      // Reset backend
+      // 1️⃣ Reset backend
       const res = await fetch("/reset", { method: "POST" });
       if (!res.ok) throw new Error(`Reset failed: ${res.status}`);
 
-      // Force frontend reset by remounting CopilotPopup
-      setResetCount(prev => prev + 1);
+      // 2️⃣ Generate a new thread ID
+      const newThreadId = crypto.randomUUID();
+      setThreadId(newThreadId);
 
-      console.log("✅ Backend + frontend reset completed");
+      // 3️⃣ Reset frontend chat messages
+      resetChat();
+
+      console.log("✅ Backend reset + new thread ID set + frontend cleared");
     } catch (err) {
       console.error("❌ Reset failed:", err);
     }
@@ -24,17 +30,9 @@ export default function CopilotWithReset({
 
   return (
     <div style={{ position: "fixed", bottom: "20px", right: "20px" }}>
-      {/* Input area wrapper */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "8px",
-        }}
-      >
+      <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
         {/* CopilotPopup with all your existing props */}
         <CopilotPopup
-          key={resetCount} // forces remount on reset
           labels={{
             title: "StarRocks Assistant",
             initial:
@@ -61,7 +59,7 @@ export default function CopilotWithReset({
             flexShrink: 0,
           }}
           onClick={handleReset}
-          title="Reset chat and backend state"
+          title="Reset chat and start a new thread"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
