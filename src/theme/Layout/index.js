@@ -1,6 +1,6 @@
 import React from "react";
 import { CopilotKit, useCopilotContext, useCopilotChat } from "@copilotkit/react-core";
-import { CopilotPopup } from "@copilotkit/react-ui";
+import { CopilotPopup, InputProps } from "@copilotkit/react-ui";
 import "@copilotkit/react-ui/styles.css";
 import clsx from "clsx";
 import ErrorBoundary from "@docusaurus/ErrorBoundary";
@@ -67,7 +67,9 @@ function NewThreadButton() {
       setThreadId(newThreadId);
       reset();
   };
-  
+    
+
+    
   return (
     <button
           onClick={startNewThread}
@@ -77,7 +79,32 @@ function NewThreadButton() {
       </button>
   );
 }
- 
+
+function CustomInputWithReset({ inProgress, onSend, onStop, onUpload }) {
+  const { reset } = useCopilotChat();
+  
+  return (
+    <div className="copilotKitInputControls">
+      {onUpload && (
+        <button onClick={onUpload} className="copilotKitInputControlButton">
+          {/* upload icon */}
+        </button>
+      )}
+      
+      {/* Your reset button */}
+      <button onClick={reset} className="copilotKitInputControlButton">
+        {/* reset icon */}r
+      </button>
+      
+      <div style={{ flexGrow: 1 }} />
+      
+      <button onClick={inProgress ? onStop : () => onSend(text)} className="copilotKitInputControlButton">
+        {/* send/stop icon */}s
+      </button>
+    </div>
+  );
+}
+
 export default function Layout(props) {
   const {
     children,
@@ -126,6 +153,7 @@ export default function Layout(props) {
           markdownTagRenderers={createMarkdownTagRenderers()}
                   RenderActionExecutionMessage={MyRenderActionExecutionMessage}
                   Button={NewThreadButton}
+                  Input={CustomInputWithReset}
         />
       </LayoutProvider>
     </CopilotKit>
