@@ -69,17 +69,12 @@ function NewThreadButton() {
   };
   
   return (
-    <><button
+    <button
           onClick={startNewThread}
           className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
       >
           New Thread
-      </button><button
-          onClick={reset}
-          className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
-      >
-              Reset
-          </button></>
+      </button>
   );
 }
  
