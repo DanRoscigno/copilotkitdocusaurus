@@ -1,5 +1,5 @@
 import React from "react";
-import { CopilotPopup  } from "@copilotkit/react-ui";
+import { CopilotPopup } from "@copilotkit/react-ui";
 import { useCopilotContext, useCopilotChat } from "@copilotkit/react-core";
 
 export default function CopilotWithReset({
@@ -35,6 +35,7 @@ export default function CopilotWithReset({
         <CopilotPopup
           labels={{
             title: "StarRocks Assistant",
+            placeholder: "Ask a question, or to reset push the reset button to the lower right...",
             initial:
               "AI generated answers are based on docs and other sources. Please test answers in non-production environments.",
           }}
