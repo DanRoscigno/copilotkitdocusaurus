@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import { CopilotPopup } from "@copilotkit/react-ui";
 
-export default function CopilotWithReset() {
+export default function CopilotWithReset({
+  markdownTagRenderers,
+  RenderActionExecutionMessage,
+}) {
   const [resetCount, setResetCount] = useState(0);
 
   const handleReset = async () => {
@@ -10,7 +13,7 @@ export default function CopilotWithReset() {
       const res = await fetch("/reset", { method: "POST" });
       if (!res.ok) throw new Error(`Reset failed: ${res.status}`);
 
-      // Reset frontend by remounting CopilotPopup
+      // Force frontend reset by remounting CopilotPopup
       setResetCount(prev => prev + 1);
 
       console.log("✅ Backend + frontend reset completed");
@@ -26,18 +29,21 @@ export default function CopilotWithReset() {
         style={{
           display: "flex",
           alignItems: "center",
-          gap: "8px", // spacing between input and button
+          gap: "8px",
         }}
       >
-        {/* CopilotPopup input */}
+        {/* CopilotPopup with all your existing props */}
         <CopilotPopup
-          key={resetCount} // remount to clear frontend state
-          instructions="Ask me anything!"
+          key={resetCount} // forces remount on reset
           labels={{
-            title: "My Copilot",
-            initial: "How can I help?",
+            title: "StarRocks Assistant",
+            initial:
+              "AI generated answers are based on docs and other sources. Please test answers in non-production environments.",
           }}
-          style={{ flexGrow: 1 }} // input grows to fill space
+          defaultOpen={false}
+          markdownTagRenderers={markdownTagRenderers}
+          RenderActionExecutionMessage={RenderActionExecutionMessage}
+          style={{ flexGrow: 1 }}
         />
 
         {/* Inline Reset button */}
@@ -52,9 +58,10 @@ export default function CopilotWithReset() {
             fontSize: "14px",
             fontWeight: "500",
             borderRadius: "6px",
-            flexShrink: 0, // prevent shrinking
+            flexShrink: 0,
           }}
           onClick={handleReset}
+          title="Reset chat and backend state"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
