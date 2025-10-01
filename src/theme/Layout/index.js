@@ -1,5 +1,5 @@
 import React from "react";
-import { CopilotKit } from "@copilotkit/react-core";
+import { CopilotKit, useCopilotContext, useCopilotChat } from "@copilotkit/react-core";
 import { CopilotPopup } from "@copilotkit/react-ui";
 import "@copilotkit/react-ui/styles.css";
 import clsx from "clsx";
@@ -57,6 +57,32 @@ function MyRenderActionExecutionMessage(props) {
     }
 }
 
+function NewThreadButton() {
+  const { setThreadId } = useCopilotContext();
+        const { reset } = useCopilotChat();
+
+  const startNewThread = () => {
+    // Generate a new UUID for the thread
+    const newThreadId = crypto.randomUUID();
+      setThreadId(newThreadId);
+      reset();
+  };
+  
+  return (
+    <><button
+          onClick={startNewThread}
+          className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+      >
+          New Thread
+      </button><button
+          onClick={reset}
+          className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+      >
+              Reset
+          </button></>
+  );
+}
+ 
 export default function Layout(props) {
   const {
     children,
@@ -103,7 +129,8 @@ export default function Layout(props) {
           }}
           defaultOpen={true}
           markdownTagRenderers={createMarkdownTagRenderers()}
-          RenderActionExecutionMessage={MyRenderActionExecutionMessage}
+                  RenderActionExecutionMessage={MyRenderActionExecutionMessage}
+                  Button={NewThreadButton}
         />
       </LayoutProvider>
     </CopilotKit>
