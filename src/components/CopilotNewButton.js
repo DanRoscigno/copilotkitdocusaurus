@@ -1,5 +1,4 @@
-import { InputProps, CopilotPopup } from "@copilotkit/react-ui";
-import { CopilotKit, useCopilotContext, useCopilotChat } from "@copilotkit/react-core";
+import { useCopilotContext, useCopilotChat } from "@copilotkit/react-core";
 import "@copilotkit/react-ui/styles.css";
 
 export default function CopilotNewButton({ inProgress, onSend, isVisible }) {
