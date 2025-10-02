@@ -28,7 +28,7 @@ export default function CopilotNewButton({ inProgress, onSend, isVisible }) {
       <input
         disabled={inProgress}
         type="text"
-        placeholder="Ask your question here..."
+        placeholder="Ask your question here, or reset with the button to the right..."
         className={inputStyle}
         onKeyDown={(e) => {
           if (e.key === "Enter") {
