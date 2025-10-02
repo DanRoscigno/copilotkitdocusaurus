@@ -12,12 +12,13 @@ export default function CopilotWithReset({
   const handleReset = async () => {
     try {
       // 1️⃣ Reset backend
-      const res = await fetch("/reset", { method: "POST" });
-      if (!res.ok) throw new Error(`Reset failed: ${res.status}`);
+      // const res = await fetch("/reset", { method: "POST" });
+      // if (!res.ok) throw new Error(`Reset failed: ${res.status}`);
 
       // 2️⃣ Generate a new thread ID
       const newThreadId = crypto.randomUUID();
       setThreadId(newThreadId);
+      //reset();
 
       // 3️⃣ Reset frontend chat messages
       resetChat();
