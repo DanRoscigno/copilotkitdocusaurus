@@ -36,7 +36,7 @@ export default function CopilotNewButton({ inProgress, onSend, isVisible }) {
           }
         }}
           />
-                <button
+      <button
         disabled={inProgress}
         className={buttonStyle}
         onClick={(e) => {
