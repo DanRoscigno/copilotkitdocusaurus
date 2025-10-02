@@ -1,5 +1,9 @@
 import React from "react";
-import { CopilotKit, useCopilotContext, useCopilotChat } from "@copilotkit/react-core";
+import {
+  CopilotKit,
+  useCopilotContext,
+  useCopilotChat,
+} from "@copilotkit/react-core";
 import { CopilotPopup, InputProps } from "@copilotkit/react-ui";
 import "@copilotkit/react-ui/styles.css";
 import clsx from "clsx";
@@ -17,45 +21,51 @@ import Footer from "@theme/Footer";
 import LayoutProvider from "@theme/Layout/Provider";
 import ErrorPageContent from "@theme/ErrorPageContent";
 import styles from "./styles.module.css";
-import {SearchDocActionView} from "@site/src/components/SearchDocActionView";
-import {GeneralToolCallView} from "@site/src/components/GeneralToolCallView";
-import CopilotWithReset from "../../components/CopilotWithReset";
-
+import { SearchDocActionView } from "@site/src/components/SearchDocActionView";
+import { GeneralToolCallView } from "@site/src/components/GeneralToolCallView";
+import CopilotNewButton from "../../components/CopilotNewButton";
 
 const createMarkdownTagRenderers = (originalRenderers = {}) => {
-    return {
-        ...originalRenderers,
-        code: ({ children, className, inline, ...props }) => {
-            // Handle inline code
-            if (inline || (children && typeof children === "string" && !children.includes('\n'))) {
-                return <code className="bg-gray-200 px-1 py-0.5 rounded text-sm">{children}</code>;
-            }
+  return {
+    ...originalRenderers,
+    code: ({ children, className, inline, ...props }) => {
+      // Handle inline code
+      if (
+        inline ||
+        (children && typeof children === "string" && !children.includes("\n"))
+      ) {
+        return (
+          <code className="bg-gray-200 px-1 py-0.5 rounded text-sm">
+            {children}
+          </code>
+        );
+      }
 
-            // Handle regular code blocks
-            return (
-                <pre className="bg-gray-200 p-4 rounded-md overflow-x-auto mb-4">
-                    <code className={className} {...props}>
-                        {children}
-                    </code>
-                </pre>
-            );
-        }
-    };
+      // Handle regular code blocks
+      return (
+        <pre className="bg-gray-200 p-4 rounded-md overflow-x-auto mb-4">
+          <code className={className} {...props}>
+            {children}
+          </code>
+        </pre>
+      );
+    },
+  };
 };
 
 function MyRenderActionExecutionMessage(props) {
-    const {message} = props;
+  const { message } = props;
 
-    // Skip rendering if message doesn't have required properties
-    if (!message || !message.name) {
-        return null;
-    }
+  // Skip rendering if message doesn't have required properties
+  if (!message || !message.name) {
+    return null;
+  }
 
-    if (message.name === "search_starrocks_doc") {
-        return <SearchDocActionView {...props}/>;
-    } else {
-        return <GeneralToolCallView {...props}/>;
-    }
+  if (message.name === "search_starrocks_doc") {
+    return <SearchDocActionView {...props} />;
+  } else {
+    return <GeneralToolCallView {...props} />;
+  }
 }
 
 export default function Layout(props) {
@@ -69,9 +79,12 @@ export default function Layout(props) {
   } = props;
   useKeyboardNavigation();
   return (
-      // <CopilotKit publicApiKey="<ck_pub_a9b6f0cee62ab9c42692f25ccfe08e38>">
-      <CopilotKit agent="sr_agent" runtimeUrl="https://ai-agent.starrocks.com/copilotkit/" showDevConsole={false}>
-
+    // <CopilotKit publicApiKey="<ck_pub_a9b6f0cee62ab9c42692f25ccfe08e38>">
+    <CopilotKit
+      agent="sr_agent"
+      runtimeUrl="https://ai-agent.starrocks.com/copilotkit/"
+      showDevConsole={false}
+    >
       <LayoutProvider>
         <PageMetadata title={title} description={description} />
 
@@ -97,14 +110,16 @@ export default function Layout(props) {
         </div>
 
         {!noFooter && <Footer />}
-        <CopilotWithReset
+        <CopilotPopup
           labels={{
             title: "StarRocks Assistant",
-             initial: "AI generated answers are based on docs and other sources. Please test answers in non-production environments.",
+            initial:
+              "AI generated answers are based on docs and other sources. Please test answers in non-production environments.",
           }}
           defaultOpen={false}
           markdownTagRenderers={createMarkdownTagRenderers()}
           RenderActionExecutionMessage={MyRenderActionExecutionMessage}
+          Input={CopilotNewButton}
         />
       </LayoutProvider>
     </CopilotKit>
