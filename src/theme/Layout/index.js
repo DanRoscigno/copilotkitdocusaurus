@@ -1,10 +1,6 @@
 import React from "react";
-import {
-  CopilotKit,
-  useCopilotContext,
-  useCopilotChat,
-} from "@copilotkit/react-core";
-import { CopilotPopup, InputProps } from "@copilotkit/react-ui";
+import { CopilotKit } from "@copilotkit/react-core";
+import { CopilotPopup } from "@copilotkit/react-ui";
 import "@copilotkit/react-ui/styles.css";
 import clsx from "clsx";
 import ErrorBoundary from "@docusaurus/ErrorBoundary";
@@ -23,7 +19,8 @@ import ErrorPageContent from "@theme/ErrorPageContent";
 import styles from "./styles.module.css";
 import { SearchDocActionView } from "@site/src/components/SearchDocActionView";
 import { GeneralToolCallView } from "@site/src/components/GeneralToolCallView";
-import CopilotNewButton from "../../components/CopilotNewButton";
+import { CopilotCustomInput } from "@site/src/components/CopilotCustomInput";
+//import { onReset } from "@site/src/utils/AgentConfig";
 
 const createMarkdownTagRenderers = (originalRenderers = {}) => {
   return {
@@ -116,10 +113,15 @@ export default function Layout(props) {
             initial:
               "AI generated answers are based on docs and other sources. Please test answers in non-production environments.",
           }}
-          defaultOpen={false}
+          defaultOpen={true}
           markdownTagRenderers={createMarkdownTagRenderers()}
           RenderActionExecutionMessage={MyRenderActionExecutionMessage}
-          Input={CopilotNewButton}
+          Input={(props) => (
+            <CopilotCustomInput
+              {...props}
+              //onReset={onReset}
+            />
+          )}
         />
       </LayoutProvider>
     </CopilotKit>
