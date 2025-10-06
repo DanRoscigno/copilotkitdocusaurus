@@ -1,6 +1,6 @@
-import {InputProps, useChatContext} from "@copilotkit/react-ui";
 import {useCopilotChat, useCopilotContext} from "@copilotkit/react-core";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useRef } from "react";
+
 //import {SidebarControlContext} from "@/contexts/SidebarControlContext";
 
 /**
