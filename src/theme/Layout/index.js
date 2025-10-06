@@ -4,11 +4,7 @@ import { CopilotPopup } from "@copilotkit/react-ui";
 import "@copilotkit/react-ui/styles.css";
 import clsx from "clsx";
 import ErrorBoundary from "@docusaurus/ErrorBoundary";
-import {
-  PageMetadata,
-  SkipToContentFallbackId,
-  ThemeClassNames,
-} from "@docusaurus/theme-common";
+import { PageMetadata, SkipToContentFallbackId, ThemeClassNames } from "@docusaurus/theme-common";
 import { useKeyboardNavigation } from "@docusaurus/theme-common/internal";
 import SkipToContent from "@theme/SkipToContent";
 import AnnouncementBar from "@theme/AnnouncementBar";
@@ -20,7 +16,6 @@ import styles from "./styles.module.css";
 import { SearchDocActionView } from "@site/src/components/SearchDocActionView";
 import { GeneralToolCallView } from "@site/src/components/GeneralToolCallView";
 import { CopilotCustomInput } from "@site/src/components/CopilotCustomInput";
-//import { onReset } from "@site/src/utils/AgentConfig";
 
 const createMarkdownTagRenderers = (originalRenderers = {}) => {
   return {
@@ -76,7 +71,6 @@ export default function Layout(props) {
   } = props;
   useKeyboardNavigation();
   return (
-    // <CopilotKit publicApiKey="<ck_pub_a9b6f0cee62ab9c42692f25ccfe08e38>">
     <CopilotKit
       agent="sr_agent"
       runtimeUrl="https://ai-agent.starrocks.com/copilotkit/"
@@ -119,7 +113,6 @@ export default function Layout(props) {
           Input={(props) => (
             <CopilotCustomInput
               {...props}
-              //onReset={onReset}
             />
           )}
         />
