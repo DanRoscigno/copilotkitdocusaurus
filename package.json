@@ -17,7 +17,7 @@
     "@copilotkit/react-core": "1.9.3",
     "@copilotkit/react-ui": "1.9.3",
     "@docusaurus/core": "3.7.0",
-    "@docusaurus/plugin-client-redirects": "^3.9.2",
+    "@docusaurus/plugin-client-redirects": "3.7.0",
     "@docusaurus/preset-classic": "3.7.0",
     "@mdx-js/react": "^3.0.0",
     "@radix-ui/react-accordion": "^1.2.12",
