@@ -43,4 +43,4 @@ jobs:
           PR_NUMBER: ${{ github.event.pull_request.number }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         run: |
-          python .github/workflows/review_docs.py
+          python .github/workflows/review-docs.py
