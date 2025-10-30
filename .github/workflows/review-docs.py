@@ -9,7 +9,7 @@ HEAD_SHA = os.environ["HEAD_SHA"]
 
 GH = "https://api.github.com"
 HEADERS_GH = {"Authorization": f"Bearer {GITHUB_TOKEN}", "Accept": "application/vnd.github+json"}
-OPENAI_URL = "https://api.openai.com/v1/chat/completions"
+OPENAI_URL = "https://api.openai.com/v1/responses"
 HEADERS_OAI = {"Authorization": f"Bearer {OPENAI_API_KEY}", "Content-Type": "application/json"}
 
 # ---- GitHub helpers
