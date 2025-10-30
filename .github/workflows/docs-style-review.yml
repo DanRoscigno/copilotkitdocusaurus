@@ -1,46 +1,57 @@
-name: Docs style review (Microsoft guide, inline)
+name: Documentation Style Review
 
 on:
-  pull_request_target:
-    types: [opened, synchronize, reopened, ready_for_review]
+  pull_request:
     paths:
-      - 'docs/en/**'
-      - 'docs/ja/**'
-      - 'docs/zh/**'
-      - '**/*.md'
-      - '**/*.mdx'
-
-permissions:
-  contents: read
-  pull-requests: write
+      - 'docs/**/*.md'
+      - 'docs/**/*.mdx'
 
 jobs:
-  review-docs:
-    if: ${{ !github.event.pull_request.draft }}
+  markdown-style-check:
+    name: Check Markdown Style
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout PR HEAD safely
-        uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
-          persist-credentials: false
+          node-version: '24'
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
+      - name: Install markdownlint-cli
+        run: npm install -g markdownlint-cli
 
-      - name: Install deps
+      - name: Run markdownlint
+        run: markdownlint "**/*.md" > markdownlint.txt || true
+
+      - name: Install Vale
         run: |
-          python -m pip install --upgrade pip
-          pip install requests
+          curl -fsSL https://github.com/errata-ai/vale/releases/latest/download/vale-linux.tar.gz | tar -xz
+          sudo mv vale /usr/local/bin/
 
-      - name: Run Microsoft-style inline review
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          REPO_FULL: ${{ github.repository }}
-          PR_NUMBER: ${{ github.event.pull_request.number }}
-          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+      - name: Configure Vale
         run: |
-          python .github/workflows/review-docs.py
+          echo '[styles]' > .vale.ini
+          echo 'Microsoft = Microsoft' >> .vale.ini
+          echo '[*.md]' >> .vale.ini
+          echo 'BasedOnStyles = Microsoft' >> .vale.ini
+
+      - name: Clone Microsoft style guide for Vale
+        run: |
+          git clone https://github.com/errata-ai/Microsoft.git
+
+      - name: Run Vale
+        run: vale "**/*.md" > vale.txt || true
+
+      - name: Install Reviewdog
+        run: |
+          curl -sfL https://raw.githubusercontent.com/reviewdog/reviewdog/master/install.sh | sh -s -- -b /usr/local/bin
+
+      - name: Report markdownlint results
+        run: cat markdownlint.txt | reviewdog -efm="%f:%l %m" -name="markdownlint" -reporter=github-pr-review -level=warning
+
+      - name: Report Vale results
+        run: cat vale.txt | reviewdog -efm="%f:%l:%c %m" -name="vale" -reporter=github-pr-review -level=info
+
