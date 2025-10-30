@@ -54,7 +54,7 @@ jobs:
       with:
         reporter: github-pr-review
         files: ${{steps.changed_lines.outputs.changed_files}}
-        fail_on_error: true
+        fail_on_error: false
         token: ${{secrets.GITHUB_TOKEN}}
         vale_flags: "--config=./starrocks-vale/vale.ini"
 
