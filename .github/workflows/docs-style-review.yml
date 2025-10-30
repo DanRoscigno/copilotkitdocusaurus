@@ -1,72 +1,60 @@
-name: Documentation Style Review
-
+name: Vale
 on:
   pull_request:
     paths:
-      - 'docs/**/*.md'
-      - 'docs/**/*.mdx'
+    - 'docs/en/**/*'
+
+permissions:
+  contents: read
+  pull-requests: write
+
+# Stop the current running job if a new push is made to the PR
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref }}
+  cancel-in-progress: true
 
 jobs:
-  markdown-style-check:
-    name: Check Markdown Style
+  vale:
     runs-on: ubuntu-latest
-
+    timeout-minutes: 5
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+    - uses: actions/checkout@v4
+      with:
+        persist-credentials: false
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '24'
+    - name: Clone DanRoscigno Vale
+      uses: actions/checkout@v4
+      with:
+        repository: DanRoscigno/starrocks-vale
+        path: starrocks-vale
+        persist-credentials: false
 
-      - name: Install markdownlint-cli
-        run: npm install -g markdownlint-cli
+    - name: Debug config file path
+      run: |
+        find .. -type f -name "*vale.ini"
 
-      - name: Get changed files
-        id: changes
-        run: |
-          git fetch origin ${{ github.base_ref }}
-          CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD)
-          echo "changed=$CHANGED_FILES" >> $GITHUB_OUTPUT
+    - name: Debug style dir path
+      run: |
+        find .. -type d -name styles
 
-      - name: Print changed files
-        run: echo "Changed files: ${{ steps.changes.outputs.changed }}"
+    #- name: Edit StylesPath in Vale config file
+      #run: sed -i 's/\.\.\/starrocks-vale\/styles/\.\/starrocks-vale\/styles/' ./docs/.vale.ini
 
-      - name: Run markdownlint
-        run: markdownlint "**/*.md" > markdownlint.txt || true
-
-      - name: Install Vale
-        run: |
-          curl -fsSL https://github.com/errata-ai/vale/releases/download/v3.13.0/vale_3.13.0_Linux_64-bit.tar.gz | tar -xz
-          sudo mv vale /usr/local/bin/
-
-      - name: Configure Vale
-        run: |
-          echo '[styles]' > .vale.ini
-          echo 'Microsoft = Microsoft' >> .vale.ini
-          echo '[*.md]' >> .vale.ini
-          echo 'BasedOnStyles = Microsoft' >> .vale.ini
-
-      - name: Clone Microsoft style guide for Vale
-        run: |
-          git clone https://github.com/errata-ai/Microsoft.git
-          pwd
-          ls -R
-          tree .
-
-      - name: Run Vale
-        run: vale "**/*.md" > vale.txt || true
-
-      - name: Install Reviewdog
-        run: |
-          curl -sfL https://raw.githubusercontent.com/reviewdog/reviewdog/master/install.sh | sh -s -- -b /usr/local/bin
-
-      - name: Report results
-        env:
-          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          cat markdownlint.txt | reviewdog -efm="%f:%l %m" -name="markdownlint" -reporter=github-pr-review -level=warning
-          cat vale.txt | reviewdog -efm="%f:%l:%c %m" -name="vale" -reporter=github-pr-review -level=info
-
+    - name: Find changed lines
+      id: changed_lines
+      uses: hestonhoffman/changed-lines@v1
+      with:
+        file_filter: '.md, .mdx'
+      
+    - name: run-vale
+      uses: errata-ai/vale-action@reviewdog
+      if: steps.changed_lines.outputs.changed_files
+      env:
+        REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        reporter: github-pr-check
+        files: ${{steps.changed_lines.outputs.changed_files}}
+        fail_on_error: false
+        token: ${{secrets.GITHUB_TOKEN}}
+        vale_flags: "--config=./starrocks-vale/vale.ini"
 
