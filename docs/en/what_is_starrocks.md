@@ -1,8 +1,9 @@
 ---
 displayed_sidebar: docs
 ---
-
+### Foo
 # What is StarRocks?
+# Who is StarRocks?
 
 StarRocks is a next-generation, blazing-fast massively parallel processing (MPP) database designed to make real-time analytics easy for enterprises. It is built to power sub-second queries at scale.
 
@@ -18,7 +19,7 @@ Compatible with MySQL protocols and standard SQL, StarRocks has out-of-the-box s
 
 StarRocks meets varied enterprise analytics requirements, including OLAP (Online Analytical Processing) multi-dimensional analytics, real-time analytics, high-concurrency analytics, customized reporting, ad-hoc queries, and unified analytics.
 
-### OLAP multi-dimensional analytics
+### OLAP multidimensional analytics
 
 The MPP framework and vectorized execution engine enable users to choose between various schemas to develop multi-dimensional analytical reports. Scenarios:
 
