@@ -41,6 +41,9 @@ jobs:
       - name: Clone Microsoft style guide for Vale
         run: |
           git clone https://github.com/errata-ai/Microsoft.git
+          pwd
+          ls -R
+          tree .
 
       - name: Run Vale
         run: vale "**/*.md" > vale.txt || true
