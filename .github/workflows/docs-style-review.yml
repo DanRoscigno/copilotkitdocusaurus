@@ -35,7 +35,7 @@ jobs:
     - run: pip install vale==3.9.1 # change to 3.13.0 and see if that works
 
     - name: Edit StylesPath in Vale config file
-      run: sed -i 's/\.\.\/starrocks-vale\/styles/starrocks-vale\/styles/' .vale.ini
+      run: sed -i 's/styles/starrocks-vale\/styles/' .vale.ini
            
     - name: Find changed lines
       id: changed_lines
