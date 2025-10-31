@@ -1,7 +1,6 @@
 ---
 displayed_sidebar: docs
 ---
-### Foo
 # What is StarRocks?
 # Who is Starrocks?
 
