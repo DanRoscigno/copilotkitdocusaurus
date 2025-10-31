@@ -49,13 +49,12 @@ jobs:
         CHANGED_FILES: ${{ steps.changed_lines.outputs.changed_files }}
       run: |
         vale "${CHANGED_FILES}" \
-          --output=docs/vale/vale_template.tmpl --no-exit > vale_output.log
+          --output=starrocks-vale/vale_template.tmpl --no-exit > vale_output.log
 
     - name: Parse Vale output
       if: steps.changed_lines.outputs.changed_files
       env:
         CHANGED_LINES: ${{ steps.changed_lines.outputs.changed_lines }}
       run: |
-        python docs/vale/vale_annotations.py \
+        python starrocks-vale/vale_annotations.py \
           --git_data="${CHANGED_LINES}"
-
