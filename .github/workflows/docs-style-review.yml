@@ -22,11 +22,11 @@ jobs:
       with:
         persist-credentials: false
 
-    - name: Clone Datadog Vale
+    - name: Clone StarRocks Vale
       uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4.3.0
       with:
-        repository: DataDog/datadog-vale
-        path: datadog-vale
+        repository: DanRoscigno/starrocks-vale
+        path: starrocks-vale
         persist-credentials: false
     
     - uses: actions/setup-python@82c7e631bb3cdc910f68e0081d67478d79c6982d # v5.1.0
@@ -35,7 +35,7 @@ jobs:
     - run: pip install vale==3.9.1 # change to 3.13.0 and see if that works
 
     - name: Edit StylesPath in Vale config file
-      run: sed -i 's/\.\.\/datadog-vale\/styles/datadog-vale\/styles/' .vale.ini
+      run: sed -i 's/\.\.\/starrocks-vale\/styles/starrocks-vale\/styles/' .vale.ini
            
     - name: Find changed lines
       id: changed_lines
