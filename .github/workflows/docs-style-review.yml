@@ -48,8 +48,9 @@ jobs:
       env: 
         CHANGED_FILES: ${{ steps.changed_lines.outputs.changed_files }}
       run: |
-        vale "${CHANGED_FILES}" \
-          --output=starrocks-vale/vale_template.tmpl --no-exit > vale_output.log
+        vale --no-exit \
+             "${CHANGED_FILES}" \
+             --output=starrocks-vale/vale_template.tmpl > vale_output.log
 
     - name: Parse Vale output
       if: steps.changed_lines.outputs.changed_files
