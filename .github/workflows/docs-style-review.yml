@@ -61,7 +61,6 @@ jobs:
           --git_data="${CHANGED_LINES}"
 
     - name: Write to summary
-      if: always()
       run: |
         echo "This is the lead in sentence for the list" > $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY # this is a blank line
