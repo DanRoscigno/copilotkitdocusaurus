@@ -33,6 +33,14 @@ jobs:
       with:
         python-version: '3.11'
     - run: pip install vale==3.13.0 # change to 3.13.0 and see if that works
+    
+    - name: Set up Node.js 24
+      uses: actions/setup-node@v6
+      with:
+        node-version: 24
+    - name: Install mdx2vast (for mdx files)
+      run: |
+        npm install -g mdx2vast
 
     - name: Edit StylesPath in Vale config file
       run: sed -i 's/styles/starrocks-vale\/styles/' .vale.ini
