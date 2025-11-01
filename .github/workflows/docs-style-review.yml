@@ -67,3 +67,11 @@ jobs:
       run: |
         python starrocks-vale/vale_annotations.py \
           --git_data="${CHANGED_LINES}"
+
+    - name: Post summary comment
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      if: steps.changed_lines.outputs.changed_files
+      run: |
+        COMMENT="❗️Vale linting found issues. Please check the **Files changed** tab and make the necessary updates."
+        gh pr comment ${{ github.event.pull_request.number }} --body "$COMMENT"
