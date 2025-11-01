@@ -72,7 +72,8 @@ jobs:
     - name: Post summary comment
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      if: ${{ failure() && steps.run_vale.conclusion == 'failure' }}
+      if: ${{ always }}
+      #if: ${{ failure() && steps.run_vale.conclusion == 'failure' }}
       run: |
         COMMENT="❗️Vale linting found issues. Please check the **Files changed** tab and make the necessary updates."
         gh pr comment ${{ github.event.pull_request.number }} --body "$COMMENT"
