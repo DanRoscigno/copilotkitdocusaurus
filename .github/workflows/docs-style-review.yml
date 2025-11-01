@@ -62,6 +62,7 @@ jobs:
              --output=starrocks-vale/vale_template.tmpl > vale_output.log
 
     - name: Parse Vale output
+      id: examine_output
       if: steps.changed_lines.outputs.changed_files
       env:
         CHANGED_LINES: ${{ steps.changed_lines.outputs.changed_lines }}
@@ -72,8 +73,8 @@ jobs:
     - name: Post summary comment
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      if: steps.changed_lines.outputs.changed_files
-      #if: ${{ failure() && steps.run_vale.conclusion == 'failure' }}
+      #if: steps.changed_lines.outputs.changed_files
+      if: ${{ steps.examine_output.conclusion == 'failure' }}
       run: |
         COMMENT="Vale has made some suggestions. Please check the **Files changed** tab and make the necessary updates."
         gh pr comment ${{ github.event.pull_request.number }} --body "$COMMENT"
