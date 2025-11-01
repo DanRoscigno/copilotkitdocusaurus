@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: read
+  pull-requests: write
 
 # Stop the current running job if a new push is made to the PR
 concurrency:
@@ -68,3 +69,11 @@ jobs:
         python starrocks-vale/vale_annotations.py \
           --git_data="${CHANGED_LINES}"
           
+    - name: Post summary comment
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      if: ${{ always() }}
+      #if: ${{ failure() && steps.run_vale.conclusion == 'failure' }}
+      run: |
+        COMMENT="❗️Vale linting found issues. Please check the **Files changed** tab and make the necessary updates."
+        gh pr comment ${{ github.event.pull_request.number }} --body "$COMMENT"
