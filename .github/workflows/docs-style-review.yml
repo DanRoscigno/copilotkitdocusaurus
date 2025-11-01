@@ -74,7 +74,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       #if: steps.changed_lines.outputs.changed_files
-      if: ${{ steps.examine_output.conclusion == 'failure' }}
+      if: failure() && steps.examine_output.outcome == 'failure'
+      #if: ${{ steps.examine_output.conclusion == 'failure' }}
       run: |
         COMMENT="Vale has made some suggestions. Please check the **Files changed** tab and make the necessary updates."
         gh pr comment ${{ github.event.pull_request.number }} --body "$COMMENT"
