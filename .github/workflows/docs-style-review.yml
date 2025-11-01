@@ -72,7 +72,7 @@ jobs:
     - name: Post summary comment
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      if: ${{ always }}
+      if: ${{ always() }}
       #if: ${{ failure() && steps.run_vale.conclusion == 'failure' }}
       run: |
         COMMENT="❗️Vale linting found issues. Please check the **Files changed** tab and make the necessary updates."
