@@ -58,6 +58,7 @@ const config = {
   ],
 
   plugins: [
+    './src/plugins/tailwind-config.js',
     [
       '@docusaurus/plugin-client-redirects',
       {
