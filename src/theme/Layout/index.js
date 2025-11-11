@@ -103,7 +103,6 @@ export default function Layout(props) {
         {!noFooter && <Footer />}
 
         <CopilotPopup
-          className="starrocks-popup"
           labels={{
             title: "StarRocks Assistant",
             initial:
