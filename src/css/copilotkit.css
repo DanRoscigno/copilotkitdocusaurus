@@ -5,3 +5,23 @@
 @import "./copilotkit/header.css";
 @import "./copilotkit/button.css";
 @import "./copilotkit/messages.css";
+
+/* add Rocky to the popup title */
+.copilotKitHeader,
+.copilotPopupTitle {
+  display: flex;
+  align-items: left;
+  gap: 0.5rem;
+}
+
+/* Injecting logo before title text */
+.copilotKitHeader::before {
+  content: "";
+  display: inline-block;
+  width: 96px;
+  height: 70px;
+  background-image: url('@site/static/img/rocky.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
