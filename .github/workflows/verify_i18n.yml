@@ -2,10 +2,12 @@ name: Verify Documentation Languages
 
 on:
   pull_request:
+    branches:
+      - main
     paths:
-      - "docs/en"
-      - "docs/zh"
-      - "docs/ja"
+      - 'docs/en/**/*.md'
+      - 'docs/zh/**/*.mdx'
+      - 'docs/ja/**/*.mdx'
 
 jobs:
   verify-languages:
