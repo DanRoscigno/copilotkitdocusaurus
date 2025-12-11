@@ -4,6 +4,10 @@ on:
     paths:
     - 'docs/en/**/*.md'
     - 'docs/en/**/*.mdx'
+    - 'docs/zh/**/*.md'
+    - 'docs/zh/**/*.mdx'
+    - 'docs/ja/**/*.md'
+    - 'docs/ja/**/*.mdx'
 
 permissions:
   contents: read
@@ -77,3 +81,47 @@ jobs:
       run: |
         COMMENT="Vale has made some suggestions. Please check the **Files changed** tab and make the necessary updates."
         gh pr comment ${{ github.event.pull_request.number }} --body "$COMMENT"
+
+    - name: Determine languages changed
+      id: langs
+      run: |
+          echo "en_changed=false" >> $GITHUB_OUTPUT
+          echo "zh_changed=false" >> $GITHUB_OUTPUT
+          echo "ja_changed=false" >> $GITHUB_OUTPUT
+
+          for file in ${{ steps.changes.outputs.all_changed_files }}; do
+            if [[ "$file" == docs/en/* ]]; then
+              echo "en_changed=true" >> $GITHUB_OUTPUT
+            fi
+            if [[ "$file" == docs/zh/* ]]; then
+              echo "zh_changed=true" >> $GITHUB_OUTPUT
+            fi
+            if [[ "$file" == docs/ja/* ]]; then
+              echo "ja_changed=true" >> $GITHUB_OUTPUT
+            fi
+          done
+
+    - name: Validate all languages were updated
+      run: |
+        missing=()
+
+        if [[ "${{ steps.langs.outputs.en_changed }}" != "true" ]]; then
+          missing+=("English (/docs/en/)")
+        fi
+        if [[ "${{ steps.langs.outputs.zh_changed }}" != "true" ]]; then
+          missing+=("Chinese (/docs/zh/)")
+        fi
+        if [[ "${{ steps.langs.outputs.ja_changed }}" != "true" ]]; then
+          missing+=("Japanese (/docs/ja/)")
+        fi
+
+        if [ ${#missing[@]} -ne 0 ]; then
+          echo "❌ Missing documentation updates:"
+          for lang in "${missing[@]}"; do
+            echo " - $lang"
+          done
+          exit 1
+        fi
+
+        echo "✅ All language folders updated!"
+
