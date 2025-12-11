@@ -3,7 +3,7 @@ name: Verify Documentation Languages
 on:
   pull_request:
     paths:
-      - "docs/en
+      - "docs/en"
       - "docs/zh"
       - "docs/ja"
 
