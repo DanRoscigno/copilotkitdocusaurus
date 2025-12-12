@@ -115,8 +115,8 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            const missingUpdates = core.getInput('missing_updates').trim();
-            const missingFiles = core.getInput('missing_files').trim();
+            const missingUpdates = `${{ steps.analysis.outputs.missing_updates }}`;
+            const missingFiles = `${{ steps.analysis.outputs.missing_files }}`;
             process.stdout.write(`Missing updates:\n${missingUpdates}\n`);
             process.stdout.write(`Missing files:\n${missingFiles}\n`);
             
