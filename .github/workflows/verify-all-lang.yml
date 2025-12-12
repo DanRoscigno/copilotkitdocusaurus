@@ -131,7 +131,7 @@ jobs:
             }
 
             if (missingFiles.length > 0) {
-              body += "\n⚠️ **Missing files (these paths do not exist; warn only):**\n";
+              body += "\n❌ **Missing files (these paths do not exist):**\n";
               body += "```\n" + missingFiles + "\n```\n";
             }
 
@@ -163,10 +163,18 @@ jobs:
               });
             }
 
-      - name: Fail if required updates are missing
-        if: steps.analysis.outputs.missing_updates != ''
+      - name: Fail if files or updates are missing
+        if: ${{steps.analysis.outputs.missing_files != '' || steps.analysis.outputs.missing_files != '\n'}}
         run: |
-          echo "❌ Some existing files were not updated:"
-          printf '%s\n' "${{ steps.analysis.outputs.missing_updates }}"
-          exit 1
 
+          if [ ${{steps.analysis.outputs.missing_files != ''}} ]; 
+            then
+              echo "❌ Some files are missing:"
+              printf '%s\n' "${{ steps.analysis.outputs.missing_files }}"
+          fi
+          if [ ${{steps.analysis.outputs.missing_updates != ''}} ]; 
+            then
+              echo "❌ Some files are not updated:"
+              printf '%s\n' "${{ steps.analysis.outputs.missing_updates }}"
+          fi
+          exit 1
