@@ -59,7 +59,9 @@ jobs:
 
           # Accumulate all unique base paths
           all_bases=($(printf "%s\n" "${!changed_en[@]}" "${!changed_zh[@]}" "${!changed_ja[@]}" | sort -u))
-
+          echo "All affected base paths:"
+          printf '%s\n' "${all_bases[@]}"
+          
           missing_updates=()
           missing_files=()
 
