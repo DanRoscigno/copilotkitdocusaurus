@@ -61,15 +61,17 @@ jobs:
           all_bases=($(printf "%s\n" "${!changed_en[@]}" "${!changed_zh[@]}" "${!changed_ja[@]}" | sort -u))
           echo "All affected base paths:"
           printf '%s\n' "${all_bases[@]}"
-          
+
           missing_updates=()
           missing_files=()
 
           for base in "${all_bases[@]}"; do
+            echo "Checking base path: $base"
             # Has the language version changed?
             en_changed=${changed_en[$base]:-0}
             zh_changed=${changed_zh[$base]:-0}
             ja_changed=${changed_ja[$base]:-0}
+            echo " Changed status - EN: $en_changed, ZH: $zh_changed, JA: $ja_changed"
 
             # Expected file paths
             en="docs/en/$base"
