@@ -118,6 +118,7 @@ jobs:
             const missingUpdates = core.getInput('missing_updates').trim();
             const missingFiles = core.getInput('missing_files').trim();
             process.stdout.write(`Missing updates:\n${missingUpdates}\n`);
+            process.stdout.write(`Missing files:\n${missingFiles}\n`);
             
 
             let body = "## 🔍 Multi-language Documentation Check\n";
