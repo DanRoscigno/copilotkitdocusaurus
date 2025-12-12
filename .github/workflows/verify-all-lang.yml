@@ -117,7 +117,10 @@ jobs:
           script: |
             const missingUpdates = core.getInput('missing_updates').trim();
             const missingFiles = core.getInput('missing_files').trim();
-
+            echo " Missing files - ${!missing_files[@]}"
+            echo "                ${missing_files[@]}"
+            echo " Missing updates - ${!missing_updates[@]}"
+            echo "                   ${missing_updates[@]}"
             let body = "## 🔍 Multi-language Documentation Check\n";
 
             if (missingUpdates.length > 0) {
