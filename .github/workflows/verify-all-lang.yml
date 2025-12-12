@@ -1,0 +1,155 @@
+name: Verify Multi-language Doc Changes
+
+on:
+  pull_request:
+    paths:
+      - "docs/**"
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write    # needed to post comments
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Detect changed doc files (including renames)
+        id: changes
+        uses: tj-actions/changed-files@v45
+        with:
+          fetch_depth: 0
+          files: |
+            docs/**/*.md
+            docs/**/*.mdx
+
+      - name: Analyze language parity
+        id: analysis
+        run: |
+          changed_files="${{ steps.changes.outputs.all_changed_files }}"
+          echo "Changed files:"
+          echo "$changed_files"
+
+          # Maps of base paths → changed status in each language
+          declare -A changed_en changed_zh changed_ja
+
+          # Collect base paths for all changed files
+          for file in $changed_files; do
+            case "$file" in
+              docs/en/*)
+                base="${file#docs/en/}"
+                changed_en["$base"]=1
+                ;;
+              docs/zh/*)
+                base="${file#docs/zh/}"
+                changed_zh["$base"]=1
+                ;;
+              docs/ja/*)
+                base="${file#docs/ja/}"
+                changed_ja["$base"]=1
+                ;;
+            esac
+          done
+
+          # Accumulate all unique base paths
+          all_bases=($(printf "%s\n" "${!changed_en[@]}" "${!changed_zh[@]}" "${!changed_ja[@]}" | sort -u))
+
+          missing_updates=()
+          missing_files=()
+
+          for base in "${all_bases[@]}"; do
+            # Has the language version changed?
+            en_changed=${changed_en[$base]:-0}
+            zh_changed=${changed_zh[$base]:-0}
+            ja_changed=${changed_ja[$base]:-0}
+
+            # Expected file paths
+            en="docs/en/$base"
+            zh="docs/zh/$base"
+            ja="docs/ja/$base"
+
+            # If file exists but wasn't changed → error
+            if [[ -f "$en" && "$en_changed" != "1" ]]; then
+              missing_updates+=("$en")
+            elif [[ ! -f "$en" ]]; then
+              missing_files+=("$en")
+            fi
+
+            if [[ -f "$zh" && "$zh_changed" != "1" ]]; then
+              missing_updates+=("$zh")
+            elif [[ ! -f "$zh" ]]; then
+              missing_files+=("$zh")
+            fi
+
+            if [[ -f "$ja" && "$ja_changed" != "1" ]]; then
+              missing_updates+=("$ja")
+            elif [[ ! -f "$ja" ]]; then
+              missing_files+=("$ja")
+            fi
+          done
+
+          # Export results as outputs
+          echo "missing_updates<<EOF" >> $GITHUB_OUTPUT
+          printf '%s\n' "${missing_updates[@]}" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+          echo "missing_files<<EOF" >> $GITHUB_OUTPUT
+          printf '%s\n' "${missing_files[@]}" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Comment on PR with results
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const missingUpdates = core.getInput('missing_updates').trim();
+            const missingFiles = core.getInput('missing_files').trim();
+
+            let body = "## 🔍 Multi-language Documentation Check\n";
+
+            if (missingUpdates.length > 0) {
+              body += "❌ **Missing required language updates** (files exist but were not updated):\n";
+              body += "```\n" + missingUpdates + "\n```\n";
+            } else {
+              body += "✅ No missing required updates.\n";
+            }
+
+            if (missingFiles.length > 0) {
+              body += "\n⚠️ **Missing files (these paths do not exist; warn only):**\n";
+              body += "```\n" + missingFiles + "\n```\n";
+            }
+
+            // Post or update a PR comment
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+
+            const botComment = comments.find(c =>
+              c.user.type === "Bot" &&
+              c.body.startsWith("## 🔍 Multi-language Documentation Check")
+            );
+
+            if (botComment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body
+              });
+            }
+
+      - name: Fail if required updates are missing
+        if: steps.analysis.outputs.missing_updates != ''
+        run: |
+          echo "❌ Some existing files were not updated:"
+          printf '%s\n' "${{ steps.analysis.outputs.missing_updates }}"
+          exit 1
+
