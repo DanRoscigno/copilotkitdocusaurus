@@ -127,12 +127,14 @@ jobs:
               body += "❌ **Missing required language updates** (files exist but were not updated):\n";
               body += "```\n" + missingUpdates + "\n```\n";
             } else {
-              body += "✅ No missing required updates.\n";
+              body += "✅ No missing required documentation updates.\n";
             }
 
             if (missingFiles.length > 0) {
               body += "\n❌ **Missing files (these paths do not exist):**\n";
               body += "```\n" + missingFiles + "\n```\n";
+            } else {
+              body += "✅ No missing required documentation files.\n";
             }
 
             // Post or update a PR comment
@@ -166,15 +168,5 @@ jobs:
       - name: Fail if files or updates are missing
         if: ${{steps.analysis.outputs.missing_files != '' || steps.analysis.outputs.missing_files != '\n'}}
         run: |
-
-          if [ ${{steps.analysis.outputs.missing_files != ''}} ]; 
-            then
-              echo "❌ Some files are missing:"
-              printf '%s\n' "${{ steps.analysis.outputs.missing_files }}"
-          fi
-          if [ ${{steps.analysis.outputs.missing_updates != ''}} ]; 
-            then
-              echo "❌ Some files are not updated:"
-              printf '%s\n' "${{ steps.analysis.outputs.missing_updates }}"
-          fi
+          echo "Error: Some documentation files are missing or not updated in all languages."
           exit 1
