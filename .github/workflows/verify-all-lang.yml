@@ -3,7 +3,9 @@ name: Verify Multi-language Doc Changes
 on:
   pull_request:
     paths:
-      - "docs/**"
+      - "docs/en/**"
+      - "docs/zh/**"
+      - "docs/ja/**"
 
 jobs:
   verify:
@@ -35,17 +37,21 @@ jobs:
 
           # Collect base paths for all changed files
           for file in $changed_files; do
+            echo " Processing $file"
             case "$file" in
               docs/en/*)
                 base="${file#docs/en/}"
+                echo "   English $base"
                 changed_en["$base"]=1
                 ;;
               docs/zh/*)
                 base="${file#docs/zh/}"
+                echo "   Chinese $base"    
                 changed_zh["$base"]=1
                 ;;
               docs/ja/*)
                 base="${file#docs/ja/}"
+                echo "   Japanese $base"
                 changed_ja["$base"]=1
                 ;;
             esac
