@@ -96,6 +96,10 @@ jobs:
             elif [[ ! -f "$ja" ]]; then
               missing_files+=("$ja")
             fi
+            echo " Missing files - ${!missing_files[@]}"
+            echo "                ${missing_files[@]}"
+            echo " Missing updates - ${!missing_updates[@]}"
+            echo "                   ${missing_updates[@]}"
           done
 
           # Export results as outputs
